@@ -56,8 +56,8 @@ int main(int argc, char **argv) try
     }
     NN::Domain dom(In,Out,nh,nn);
     dom.Initialize();
-    dom.Alpha = 5.0; //learning rate
-    dom.type  = 0; //use the other activation function 
+    dom.Alpha = 0.5; //learning rate
+    dom.Type  = 3; //use the other activation function 
     //dom.Train(40000/*epochs*/,Nproc/*number of cores*/);
 
     //modification1

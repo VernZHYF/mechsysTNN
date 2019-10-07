@@ -57,29 +57,147 @@ inline void   idx2Pt(size_t n, iVec3_t & iv, iVec3_t & Dim) // Calculates the co
     iv(2) = n/(Dim(0)*Dim(1));
 }
 
-inline double sigmoid (double x)
+inline double actiFun(double x, size_t t)
 {
-    return 1.0/(1.0 + exp(-x));
+    double res = 0.0;
+
+    switch (t)
+    {
+        case 0:
+            res = x;
+            break;
+        case 1:
+            if (x < 0)
+            {
+                res = 0.0;
+            }
+            else
+            {
+                res = 1.0;
+            }    
+            break;
+        case 2:
+            res = 1.0/(1.0 + exp(-x));
+            break;
+        case 3:
+            res = 2.0/(1.0 + exp(-2*x)) - 1;
+            break;
+        case 4:
+            res = atan(x);      
+            break;
+        case 5:
+            if (x < 0)
+            {
+                res = 0.0;
+            }
+            else 
+            {
+                res = x;
+            }
+            break;
+        case 6:
+            if (x < 0)
+            {
+                res = 0.01*x;
+            }
+            else 
+            {
+                res = x;
+            }  
+            break;
+        case 7:
+            if (x < 0)
+            {
+                res = 0.01*(exp(x) - 1);
+            }
+            else 
+            {
+                res = x;
+            } 
+            break;
+        case 8:
+            res = log(1 + exp(x));
+            break;   
+    }
+    return res;
+}
+
+inline double dActiFun(double x, size_t t)
+{
+    double res = 0.0;
+
+    switch (t)
+    {
+        case 0:
+            res = 1.0;
+            break;
+        case 1:
+            if (x == 0)
+            {
+                res = 0.5;
+            }
+            else
+            {
+                res = 0.0;
+            }    
+            break;
+        case 2:
+            res = actiFun(x, 2)*(1 - actiFun(x, 2));
+            break;
+        case 3:
+            res = 1 - actiFun(x, 3)*actiFun(x, 3);
+            break;
+        case 4:
+            res = 1/(x*x + 1);      
+            break;
+        case 5:
+            if (x < 0)
+            {
+                res = 0.0;
+            }
+            else 
+            {
+                res = 1.0;
+            }
+            break;
+        case 6:
+            if (x < 0)
+            {
+                res = 0.01;
+            }
+            else 
+            {
+                res = 1.0;
+            }  
+            break;
+        case 7:
+            if (x < 0)
+            {
+                res = actiFun(x, 7);
+            }
+            else 
+            {
+                res = 1.0;
+            } 
+            break;
+        case 8:
+            res = 1.0/(1.0 + exp(-x));
+            break;   
+    }
+    return res;
+}
+
+// inline double sigmoid (double x)
+// {
+//     return 1.0/(1.0 + exp(-x));
     
-}
+// }
 
-inline double activation(double x)
-{
-    if (x > 0) return x;
-    else  return 0.0;
-}
-
-inline double dActivation(double x)
-{
-    if (x > 0) return 1.0;
-    else  return 0.0;
-}
-
-inline double dsigmoid(double x)
-{
-    double s = sigmoid(x);
-    return s*(1.0-s);
-}
+// inline double dsigmoid(double x)
+// {
+//     double s = sigmoid(x);
+//     return s*(1.0-s);
+// }
 
 inline size_t Training(char const * FileKey, Array<Array <double> > & I, Array<Array <double> > & O)
 {
@@ -177,7 +295,7 @@ public:
     size_t                         NO;                       ///< Number of Outputs
     size_t                         NH;                       ///< Number of hidden layers
     size_t                         NT;                       ///< Number of training sets
-    size_t                       type;
+    size_t                       Type;                       ///< Type of activation function. 0 for identity, 1 for binary step, 2 for logistic, 3 for TanH, 4 for ArcTan, 5 for Rectified Linear Unit, 6 for Parameteric Rectified Linear Unit, 7 for Exponential Linear Unit, 8 for SoftPlus 
     //size_t                      Nproc;                       ///< Number of computing cores
 
 
@@ -207,7 +325,7 @@ inline Domain::Domain(char const * FileKey)
 inline Domain::Domain(Array<Array <double> > & In, Array<Array <double> > & Out, size_t Nhidden, size_t *Nn)
 {
     omp_init_lock(&lck);
-    type = 1;
+    Type = 0;
     Alpha = 0.3;
     NT = In.Size();
     OT.Resize(NT);
@@ -285,7 +403,7 @@ inline Domain::Domain(Array<Array <double> > & In, Array<Array <double> > & Out,
 inline Domain::Domain(Array<Array <double> > & In, Array<Array <double> > & Out, size_t NN)
 {
     omp_init_lock(&lck);
-    type = 1;
+    Type = 0;
     Alpha = 0.3;
     size_t Nhidden = 1;
     size_t Nn[1];
@@ -365,7 +483,7 @@ inline Domain::Domain(Array<Array <double> > & In, Array<Array <double> > & Out,
 inline Domain::Domain(Array<Array <double> > & In, Array<Array <double> > & Out, size_t Nhidden, size_t NN)
 {
     omp_init_lock(&lck);
-    type = 1;
+    Type = 1;
     Alpha = 0.3;
     size_t Nn[Nhidden];
     for (size_t nh=0;nh<Nhidden;nh++) Nn[nh] = NN;
@@ -375,7 +493,7 @@ inline Domain::Domain(Array<Array <double> > & In, Array<Array <double> > & Out,
     E .Resize(NT);
     NI = In [0].Size();
     NO = Out[0].Size();
-    NH    = Nhidden;
+    NH = Nhidden;
     I = In;
     O = Out;
     W.Resize(Nhidden+1);
@@ -491,17 +609,16 @@ inline void Domain::BackErr (size_t Nproc)
                 ParTMult(W[nh+1],E [nt][nh+1],E [nt][nh],1);
                 for (size_t nn=0;nn<N[nh];nn++)
                 {
-                    //modi
-                    //E[nt][nh][nn] *= OT[nt][nh][nn]*(1.0-OT[nt][nh][nn]);
-                    if (type != 1)
-                    {
-                        E[nt][nh][nn] *= dActivation(AC[nt][nh][nn]+B[nh][nn]);
-                    }
-                    else
-                    {                
-                        //E[nt][nh][nn] *= OT[nt][nh][nn]*(1.0-OT[nt][nh][nn]);
-                        E[nt][nh][nn] *= dsigmoid(AC[nt][nh][nn]+B[nh][nn]);
-                    }
+
+                    // if (type != 1)
+                    // {
+                    //     E[nt][nh][nn] *= dActivation(AC[nt][nh][nn]+B[nh][nn]);
+                    // }
+                    // else
+                    // {                
+
+                        E[nt][nh][nn] *= dActiFun(AC[nt][nh][nn]+B[nh][nn], Type);
+                    // }
                 }
             }
         }
@@ -582,15 +699,15 @@ inline void Domain::Forward (size_t Nproc)
             }
             for (size_t nn=0;nn<N[nh];nn++)
             {
-                if (type != 1)
-                {
-                    OT[nt][nh][nn] = activation(AC[nt][nh][nn]+B[nh][nn]);
-                }
-                else 
-                {                
-                    OT[nt][nh][nn] = sigmoid(AC[nt][nh][nn]+B[nh][nn]);
-                }
-                //OT[nt][nh][nn] = A[nh][nn]*sigmoid(OT[nt][nh][nn]+B[nh][nn]);
+                // if (type != 1)
+                // {
+                //     OT[nt][nh][nn] = activation(AC[nt][nh][nn]+B[nh][nn]);
+                // }
+                // else 
+                // {                
+                    OT[nt][nh][nn] = actiFun(AC[nt][nh][nn]+B[nh][nn], Type);
+                // }
+
             }
         }
     }
@@ -604,13 +721,36 @@ inline void Domain::Train   (size_t epochs, size_t Nproc)
     printf("%s      Number of outputs           =  %zd%s\n", TERM_CLR4, NO   , TERM_RST);
     printf("%s      Number of hidden layers     =  %zd%s\n", TERM_CLR4, NH   , TERM_RST);
     printf("%s      Number of neurons per layer =  %zd%s\n", TERM_CLR4, N[0] , TERM_RST);
-    if(type == 1) 
+    switch (Type)
     {
-        printf("%s      Use the sigmoid function!\n", TERM_CLR4);
-    } else
-    {
-        printf("%s      Use the step function!\n", TERM_CLR4);
-    }
+        case 0:
+            printf("%s      Use the Identity function!\n", TERM_CLR4);
+            break;
+        case 1:
+            printf("%s      Use the Binary Step function!\n", TERM_CLR4);
+            break;
+        case 2:
+            printf("%s      Use the Sigmoid function!\n", TERM_CLR4);
+            break;
+        case 3:
+            printf("%s      Use the TanH function!\n", TERM_CLR4);
+            break;
+        case 4:
+            printf("%s      Use the ArcTan function!\n", TERM_CLR4);
+            break;
+        case 5:
+            printf("%s      Use the Step(Rectified Linear Unit) function!\n", TERM_CLR4);
+            break;
+        case 6:
+            printf("%s      Use the Parameteric Rectified Linear Unit function!\n", TERM_CLR4);
+            break;
+        case 7:
+            printf("%s      Use the Exponential Linear Unit function!\n", TERM_CLR4);
+            break;
+        case 8:
+            printf("%s      Use the SoftPlus function!\n", TERM_CLR4);
+            break;   
+    }        
     
 
     for (size_t ne=0;ne<epochs;ne++)
@@ -638,14 +778,14 @@ inline void Domain::Predict (Array<double> & Input, Array<double> & Predict, siz
         }
         for (size_t nn=0;nn<N[nh];nn++)
         {
-            if (type != 1)
-            {
-                OT[0][nh][nn] = activation(AC[0][nh][nn]+B[nh][nn]);
-            }
-            else 
-            {                
-                OT[0][nh][nn] = sigmoid(AC[0][nh][nn]+B[nh][nn]);
-            }
+        //     if (type != 1)
+        //     {
+        //         OT[0][nh][nn] = activation(AC[0][nh][nn]+B[nh][nn]);
+        //     }
+        //     else 
+        //     {                
+                OT[0][nh][nn] = actiFun(AC[0][nh][nn]+B[nh][nn], Type);
+            // }
         }
     }
     Predict = OT[0][NH];
