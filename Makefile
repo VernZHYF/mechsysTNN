@@ -54,7 +54,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/zyf/mechsys
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/zyf/mechsys
+CMAKE_BINARY_DIR = /home/zyf/M3/mechsysTNN
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -94,9 +94,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zyf/mechsys/CMakeFiles /home/zyf/mechsys/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zyf/M3/mechsysTNN/CMakeFiles /home/zyf/M3/mechsysTNN/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zyf/mechsys/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zyf/M3/mechsysTNN/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -801,6 +801,32 @@ tnn04/fast:
 .PHONY : tnn04/fast
 
 #=============================================================================
+# Target rules for targets named tnn05
+
+# Build rule for target.
+tnn05: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tnn05
+.PHONY : tnn05
+
+# fast build rule for target.
+tnn05/fast:
+	$(MAKE) -f tnn/CMakeFiles/tnn05.dir/build.make tnn/CMakeFiles/tnn05.dir/build
+.PHONY : tnn05/fast
+
+#=============================================================================
+# Target rules for targets named test09
+
+# Build rule for target.
+test09: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test09
+.PHONY : test09
+
+# fast build rule for target.
+test09/fast:
+	$(MAKE) -f tsph/CMakeFiles/test09.dir/build.make tsph/CMakeFiles/test09.dir/build
+.PHONY : test09/fast
+
+#=============================================================================
 # Target rules for targets named test07
 
 # Build rule for target.
@@ -965,6 +991,8 @@ help:
 	@echo "... tnn01"
 	@echo "... tnn03"
 	@echo "... tnn04"
+	@echo "... tnn05"
+	@echo "... test09"
 	@echo "... test07"
 	@echo "... test05"
 	@echo "... test02"

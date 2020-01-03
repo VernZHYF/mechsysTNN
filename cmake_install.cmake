@@ -39,14 +39,14 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/zyf/mechsys/tlbm/cmake_install.cmake")
-  include("/home/zyf/mechsys/temlbm/cmake_install.cmake")
-  include("/home/zyf/mechsys/temlbm2/cmake_install.cmake")
-  include("/home/zyf/mechsys/tadlbm/cmake_install.cmake")
-  include("/home/zyf/mechsys/tflbm/cmake_install.cmake")
-  include("/home/zyf/mechsys/tdem/cmake_install.cmake")
-  include("/home/zyf/mechsys/tnn/cmake_install.cmake")
-  include("/home/zyf/mechsys/tsph/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/tlbm/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/temlbm/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/temlbm2/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/tadlbm/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/tflbm/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/tdem/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/tnn/cmake_install.cmake")
+  include("/home/zyf/M3/mechsysTNN/tsph/cmake_install.cmake")
 
 endif()
 
@@ -58,5 +58,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/zyf/mechsys/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/zyf/M3/mechsysTNN/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

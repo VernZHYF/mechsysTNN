@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zyf/mechsys/tdem/test_beam.cpp" "/home/zyf/mechsys/tdem/CMakeFiles/test_beam.dir/test_beam.cpp.o"
+  "/home/zyf/mechsys/tdem/test_beam.cpp" "/home/zyf/M3/mechsysTNN/tdem/CMakeFiles/test_beam.dir/test_beam.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -22,7 +22,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "."
+  "/home/zyf/mechsys"
   "/home/zyf/pkg/hdf5-1.8.15-patch1/src"
   "/home/zyf/pkg/hdf5-1.8.15-patch1/hl/src"
   "/home/zyf/pkg/blitz-0.9"

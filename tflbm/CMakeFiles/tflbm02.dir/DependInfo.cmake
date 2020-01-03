@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zyf/mechsys/tflbm/tflbm02.cpp" "/home/zyf/mechsys/tflbm/CMakeFiles/tflbm02.dir/tflbm02.cpp.o"
+  "/home/zyf/mechsys/tflbm/tflbm02.cpp" "/home/zyf/M3/mechsysTNN/tflbm/CMakeFiles/tflbm02.dir/tflbm02.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -22,7 +22,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "."
+  "/home/zyf/mechsys"
   "/home/zyf/pkg/hdf5-1.8.15-patch1/src"
   "/home/zyf/pkg/hdf5-1.8.15-patch1/hl/src"
   "/home/zyf/pkg/blitz-0.9"
