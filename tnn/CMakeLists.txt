@@ -26,6 +26,7 @@ SET(EXES
   tnn03
   tnn04
   tnn05
+  tnn06
 )
 
 FOREACH(var ${EXES})
